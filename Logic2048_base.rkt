@@ -15,7 +15,9 @@
          quitar-ceros-fila
          combinar-fila-izquierda
          agregar-ceros-derecha
-         mover-fila-izquierda)
+         mover-fila-izquierda
+         mover-tablero-izquierda
+         invertir-lista)
 
 ;----------------------------------------------------------
 ; Validar dimensión
@@ -202,3 +204,24 @@
    (combinar-fila-izquierda
     (quitar-ceros-fila fila))
    (largo-lista fila)))
+
+;----------------------------------------------------------
+; Aplicar movimiento a todo el tablero hacia la izquierda
+;----------------------------------------------------------
+
+(define (mover-tablero-izquierda tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (mover-fila-izquierda (car tablero))
+           (mover-tablero-izquierda (cdr tablero))))))
+
+;----------------------------------------------------------
+; Invertir una lista
+;----------------------------------------------------------
+
+(define (invertir-lista lista)
+  (cond
+    ((null? lista) '())
+    (else (append (invertir-lista (cdr lista))
+                  (cons (car lista) '())))))
