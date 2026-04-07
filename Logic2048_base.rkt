@@ -11,7 +11,17 @@
          contar-ceros-fila
          contar-vacios-tablero
          existe-valor?
-         tablero-ganador?)
+         tablero-ganador?
+         quitar-ceros-fila
+         combinar-fila-izquierda
+         agregar-ceros-derecha
+         mover-fila-izquierda
+         mover-tablero-izquierda
+         invertir-lista
+         mover-fila-derecha
+         mover-tablero-derecha
+         primera-columna
+         quitar-primera-columna)
 
 ;----------------------------------------------------------
 ; Validar dimensión
@@ -150,3 +160,114 @@
 
 (define (tablero-ganador? tablero)
   (existe-valor? tablero 2048))
+
+;----------------------------------------------------------
+; Quitar ceros de una fila
+;----------------------------------------------------------
+
+(define (quitar-ceros-fila fila)
+  (cond
+    ((null? fila) '())
+    ((= (car fila) 0)
+     (quitar-ceros-fila (cdr fila)))
+    (else
+     (cons (car fila)
+           (quitar-ceros-fila (cdr fila))))))
+
+;----------------------------------------------------------
+; Combinar una fila ya sin ceros hacia la izquierda
+;----------------------------------------------------------
+
+(define (combinar-fila-izquierda fila)
+  (cond
+    ((null? fila) '())
+    ((null? (cdr fila)) fila)
+    ((= (car fila) (car (cdr fila)))
+     (cons (+ (car fila) (car (cdr fila)))
+           (combinar-fila-izquierda (cdr (cdr fila)))))
+    (else
+     (cons (car fila)
+           (combinar-fila-izquierda (cdr fila))))))
+
+
+;----------------------------------------------------------
+; Agregar ceros a la derecha hasta alcanzar largo-final
+;----------------------------------------------------------
+
+(define (agregar-ceros-derecha fila largo-final)
+  (cond
+    ((= (largo-lista fila) largo-final) fila)
+    (else (agregar-ceros-derecha (append fila '(0)) largo-final))))
+
+;----------------------------------------------------------
+; Mover una fila hacia la izquierda
+;----------------------------------------------------------
+
+(define (mover-fila-izquierda fila)
+  (agregar-ceros-derecha
+   (combinar-fila-izquierda
+    (quitar-ceros-fila fila))
+   (largo-lista fila)))
+
+;----------------------------------------------------------
+; Aplicar movimiento a todo el tablero hacia la izquierda
+;----------------------------------------------------------
+
+(define (mover-tablero-izquierda tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (mover-fila-izquierda (car tablero))
+           (mover-tablero-izquierda (cdr tablero))))))
+
+;----------------------------------------------------------
+; Invertir una lista
+;----------------------------------------------------------
+
+(define (invertir-lista lista)
+  (cond
+    ((null? lista) '())
+    (else (append (invertir-lista (cdr lista))
+                  (cons (car lista) '())))))
+
+;----------------------------------------------------------
+; Mover una fila hacia la derecha
+;----------------------------------------------------------
+
+(define (mover-fila-derecha fila)
+  (invertir-lista
+   (mover-fila-izquierda
+    (invertir-lista fila))))
+
+;----------------------------------------------------------
+; Aplicar movimiento a todo el tablero hacia la derecha
+;----------------------------------------------------------
+
+(define (mover-tablero-derecha tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (mover-fila-derecha (car tablero))
+           (mover-tablero-derecha (cdr tablero))))))
+
+;----------------------------------------------------------
+; Obtener la primera columna del tablero
+;----------------------------------------------------------
+
+(define (primera-columna tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (car (car tablero))
+           (primera-columna (cdr tablero))))))
+
+;----------------------------------------------------------
+; Quitar la primera columna del tablero
+;----------------------------------------------------------
+
+(define (quitar-primera-columna tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (cdr (car tablero))
+           (quitar-primera-columna (cdr tablero))))))
