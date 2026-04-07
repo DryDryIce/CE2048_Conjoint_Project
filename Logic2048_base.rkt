@@ -13,7 +13,9 @@
          existe-valor?
          tablero-ganador?
          quitar-ceros-fila
-         combinar-fila-izquierda)
+         combinar-fila-izquierda
+         agregar-ceros-derecha
+         mover-fila-izquierda)
 
 ;----------------------------------------------------------
 ; Validar dimensión
@@ -180,3 +182,23 @@
     (else
      (cons (car fila)
            (combinar-fila-izquierda (cdr fila))))))
+
+
+;----------------------------------------------------------
+; Agregar ceros a la derecha hasta alcanzar largo-final
+;----------------------------------------------------------
+
+(define (agregar-ceros-derecha fila largo-final)
+  (cond
+    ((= (largo-lista fila) largo-final) fila)
+    (else (agregar-ceros-derecha (append fila '(0)) largo-final))))
+
+;----------------------------------------------------------
+; Mover una fila hacia la izquierda
+;----------------------------------------------------------
+
+(define (mover-fila-izquierda fila)
+  (agregar-ceros-derecha
+   (combinar-fila-izquierda
+    (quitar-ceros-fila fila))
+   (largo-lista fila)))
