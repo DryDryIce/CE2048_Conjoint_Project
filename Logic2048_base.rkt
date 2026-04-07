@@ -19,7 +19,9 @@
          mover-tablero-izquierda
          invertir-lista
          mover-fila-derecha
-         mover-tablero-derecha)
+         mover-tablero-derecha
+         primera-columna
+         quitar-primera-columna)
 
 ;----------------------------------------------------------
 ; Validar dimensión
@@ -247,3 +249,25 @@
     (else
      (cons (mover-fila-derecha (car tablero))
            (mover-tablero-derecha (cdr tablero))))))
+
+;----------------------------------------------------------
+; Obtener la primera columna del tablero
+;----------------------------------------------------------
+
+(define (primera-columna tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (car (car tablero))
+           (primera-columna (cdr tablero))))))
+
+;----------------------------------------------------------
+; Quitar la primera columna del tablero
+;----------------------------------------------------------
+
+(define (quitar-primera-columna tablero)
+  (cond
+    ((null? tablero) '())
+    (else
+     (cons (cdr (car tablero))
+           (quitar-primera-columna (cdr tablero))))))
