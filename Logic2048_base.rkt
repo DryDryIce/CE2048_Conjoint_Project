@@ -11,7 +11,9 @@
          contar-ceros-fila
          contar-vacios-tablero
          existe-valor?
-         tablero-ganador?)
+         tablero-ganador?
+         quitar-ceros-fila
+         combinar-fila-izquierda)
 
 ;----------------------------------------------------------
 ; Validar dimensión
@@ -150,3 +152,31 @@
 
 (define (tablero-ganador? tablero)
   (existe-valor? tablero 2048))
+
+;----------------------------------------------------------
+; Quitar ceros de una fila
+;----------------------------------------------------------
+
+(define (quitar-ceros-fila fila)
+  (cond
+    ((null? fila) '())
+    ((= (car fila) 0)
+     (quitar-ceros-fila (cdr fila)))
+    (else
+     (cons (car fila)
+           (quitar-ceros-fila (cdr fila))))))
+
+;----------------------------------------------------------
+; Combinar una fila ya sin ceros hacia la izquierda
+;----------------------------------------------------------
+
+(define (combinar-fila-izquierda fila)
+  (cond
+    ((null? fila) '())
+    ((null? (cdr fila)) fila)
+    ((= (car fila) (car (cdr fila)))
+     (cons (+ (car fila) (car (cdr fila)))
+           (combinar-fila-izquierda (cdr (cdr fila)))))
+    (else
+     (cons (car fila)
+           (combinar-fila-izquierda (cdr fila))))))
